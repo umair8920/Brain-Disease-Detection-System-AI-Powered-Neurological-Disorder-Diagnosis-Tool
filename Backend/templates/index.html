@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Classifier</title>
+</head>
+<body>
+    <h1>Image Classifier</h1>
+    <form id="uploadForm" enctype="multipart/form-data" method="post">
+        <input type="file" name="image" id="imageInput" accept="image/*">
+        <select id="modelSelect">
+            <option value="brain_disease">Brain Disease Model</option>
+            <option value="parkinsons">Parkinson's Disease Model</option>
+        </select>
+        <input type="submit" value="Upload Image" id="uploadButton">
+    </form>
+    <div id="result" style="display: none;">
+        <h2>Classification Result</h2>
+        <div id="brainDiseaseResult" style="display: none;">
+            <h3>Brain Disease Model</h3>
+            <p id="classificationBrainDisease"></p>
+            <p id="confidenceBrainDisease"></p>
+            <img id="uploadedImageBrainDisease" src="" alt="Uploaded Image" style="max-width: 400px;">
+        </div>
+        <div id="parkinsonsResult" style="display: none;">
+            <h3>Parkinson's Disease Model</h3>
+            <p id="classificationParkinsons"></p>
+            <p id="confidenceParkinsons"></p>
+            <img id="uploadedImageParkinsons" src="" alt="Uploaded Image" style="max-width: 400px;">
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            var selectedModel = document.getElementById('modelSelect').value;
+            var uploadUrl = '/upload';
+
+            if (selectedModel === 'brain_disease') {
+                uploadUrl = '/upload_brain_disease';
+            } else if (selectedModel === 'parkinsons') {
+                uploadUrl = '/upload_parkinsons';
+            } 
+
+            fetch(uploadUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultDivId = selectedModel === 'brain_disease' ? 'brainDiseaseResult' : 'parkinsonsResult';
+                document.getElementById(resultDivId).style.display = 'block';
+                if (selectedModel === 'brain_disease') {
+                    document.getElementById('classificationBrainDisease').textContent = 'Classification: ' + data.classification;
+                    document.getElementById('confidenceBrainDisease').textContent = 'Confidence: ' + data.confidence.toFixed(2) + '%';
+                    document.getElementById('uploadedImageBrainDisease').src = 'data:image/jpeg;base64,' + data.image_base64;
+                } else {
+                    document.getElementById('classificationParkinsons').textContent = 'Classification: ' + data.classification;
+                    document.getElementById('confidenceParkinsons').textContent = 'Confidence: ' + data.confidence.toFixed(2) + '%';
+                    document.getElementById('uploadedImageParkinsons').src = 'data:image/jpeg;base64,' + data.image_base64;
+                }
+                document.getElementById('result').style.display = 'block';
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
