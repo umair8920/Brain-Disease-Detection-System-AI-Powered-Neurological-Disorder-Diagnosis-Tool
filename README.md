@@ -1,7 +1,6 @@
 ﻿# Brain-Disease-Detection-System-AI-Powered-Neurological-Disorder-Diagnosis-Tool
 
 Role: Full-Stack Developer (Frontend & Backend)
-Duration: [Add duration of your involvement]
 Technologies Used: React Native, Python (Flask), Firebase, AI/ML Models, Medical Imaging (MRI, CT)
 Implemented Firebase for user authentication (login/signup) and to store patient scan histories securely.
 Built and integrated AI/ML models for analyzing brain scans, focusing on detecting neurological conditions such as tumors, Alzheimer’s, and Parkinson’s disease.
